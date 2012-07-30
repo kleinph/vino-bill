@@ -40,20 +40,20 @@ class Invoice(models.Model):
     customer = models.TextField("Kundendaten", blank = True)
     rebate = models.PositiveIntegerField("Rabatt (%)")
     invoice_positions = models.ManyToManyField(Wine, through = "InvoicePosition", verbose_name = "Rechnungsposten")
-    
+
+    def _get_total(self):
+        total = 0
+        for pos in self.invoice_positions.all():
+            total += pos.sum
+        return sum
+    total = property(_get_total)
+
     class Meta:
         verbose_name = "Rechnung"
         verbose_name_plural = "Rechnungen"
 
-	#def _get_total(self):
-	#	sum = 0
-	#	for pos in self.invoice_positions.all()
-	#		sum += pos.sum_
-	#	return sum
-	#total = property(_get_sum)
-		
-	def __unicode__(self):
-		return unicode(self.id)
+    def __unicode__(self):
+        return unicode(self.id)
 
 class InvoicePosition(models.Model):
     quantity = models.IntegerField("Anzahl")

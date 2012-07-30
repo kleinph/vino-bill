@@ -13,7 +13,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     inlines = [InvoicePositionInline]
     search_fields = ["customer"]
     date_hierarchy = "date"
-    list_display = ("id", "date",)
+    list_display = ("id", "date", "total")
 
 class WineAdmin(admin.ModelAdmin):
     list_filter = ["category"]

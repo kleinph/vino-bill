@@ -17,7 +17,7 @@
         <div class="span6">
         
           {% if categories %}
-          <ul class="nav accordion" id="wine-list">
+          <ul class="accordion unstyled" id="wine-list">
             {% for category in categories %}
             <li class="accordion-group">
               <div class="accordion-heading">
@@ -31,10 +31,12 @@
                     {% for wine in wines %}
                       {% if wine.category == category %}
                       <li id="wine-{{ wine.id }}">
-                        {{ wine.description }}<br>
-                        {{ wine.quantity }} l – € {{ wine.price }}  
+                        <strong class="description">{{ wine.description }}</strong><br>
+                        {{ wine.quantity }} l – € <span class="price">{{ wine.price }}</span>
                         <span class="input-prepend input-append">
-                          <button class="btn" ><i class="icon-minus">-</i></button><input class="input-micro" type="number"><button class="btn" type="button"><i class="icon-plus">+</i></button>
+                          <button id="decrease-{{ wine.id }}" class="btn" onClick="decrease(this.id)"><i class="icon-minus">-</i></button><!--
+                       --><input id="quantity-{{ wine.id }}" class="input-micro" type="number" onChange="updateTable(this.id)"><!--
+                       --><button id="increase-{{ wine.id }}" class="btn" onClick="increase(this.id)"><i class="icon-plus">+</i></button>
                         </span>
                       </li>{% endif %}
                     {% endfor %}
@@ -48,7 +50,7 @@
         </div>
         
         <div class="span6">
-         <table class="table">
+         <table id="wine-table" class="table">
             <thead>
               <tr>
                 <th>#</th>
@@ -59,7 +61,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <!--<tr>
                 <td>1</td>
                 <td>Federwolke 2011</td>
                 <td class="right">€ 3,50</td>
@@ -79,7 +81,7 @@
                 <td class="right">€ 75,00</td>
                 <td class="right">1</td>
                 <td class="right">€ 75,00</td>
-              </tr>
+              </tr>-->
             </tbody>
           </table>
           <hr>

@@ -1,11 +1,22 @@
 var pos = 0;
 
+function updateTotal() {
+	var total = 0;
+	
+	$("#wine-table .sum").each(function(index, object) {
+		value = 
+		total += Number($(this).html().replace(',', '.'));
+	});
+	
+	$("#wine-table #total .total").html("€ " + total.toFixed(2).replace('.', ','));
+}
+
 function updateTable(field) {
 	id = getId(field)
 	name = $("#wine-" + id + " .description").html();
 	quantity = $("#quantity-" + id).val();
 	price = $("#wine-" + id + " .price").html().replace(',', '.');
-	sum = "€ " + (quantity * price).toFixed(2).replace('.', ',');
+	sum = (quantity * price).toFixed(2).replace('.', ',');
 	
 	if ($("#wine-table #item-" + id).length == 0) {
 		$("#wine-table #total").before(
@@ -14,7 +25,7 @@ function updateTable(field) {
 			"  <td>" + name + "</td>" +
 			"  <td class='right'>€ " + price.replace('.', ',') + "</td>" +
 			"  <td class='right quantity'>" + quantity + "</td>" +
-			"  <td class='right sum'>" + sum + "</td>" +
+			"  <td class='right'>€ <span class='sum'>" + sum + "</span></td>" +
 			"</tr>"
 		);
 	} else if (quantity == 0) {
@@ -24,6 +35,8 @@ function updateTable(field) {
 		$("#wine-table #item-" + id + " .quantity").html(quantity);
 		$("#wine-table #item-" + id + " .sum").html(sum);
 	}
+	
+	updateTotal();
 }
 
 function decrease(field) {

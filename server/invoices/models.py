@@ -24,7 +24,7 @@ class Category(models.Model):
 
 class Wine(models.Model):
     description = models.CharField("Bezeichnung", max_length = 30)
-    quantity = models.PositiveIntegerField("Gebinde (ml)")
+    volume = models.PositiveIntegerField("Gebinde (ml)")
     price = CurrencyField("Preis", decimal_places = 2, max_digits = 5)
     category = models.ForeignKey(Category, null = True, verbose_name = "Kategorie")
     
@@ -34,6 +34,10 @@ class Wine(models.Model):
         
     def __unicode__(self):
         return self.description
+        
+    def _get_volume_in_l(self):
+        return float(self.volume / 1000.0)
+    volume_in_l = property(_get_volume_in_l)
 
 class Invoice(models.Model):
     date = models.DateField("Datum")

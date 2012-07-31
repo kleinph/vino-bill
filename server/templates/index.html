@@ -47,7 +47,7 @@
                       {% if wine.category == category %}
                       <li id="wine-{{ wine.id }}" style="margin-bottom: 10px;">
                         <strong class="description">{{ wine.description }}</strong><br>
-                        {{ wine.quantity }} l – € <span class="price">{{ wine.price }}</span>
+                        {{ wine.volume_in_l }} l – € <span class="price">{{ wine.price }}</span>
                         <span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
                           <button id="decrease-{{ wine.id }}" class="btn" onClick="decrease(this.id)"><i class="icon-minus">-</i></button><!--
                        --><input id="quantity-{{ wine.id }}" class="input-micro" type="number" onChange="updateTable(this.id)"><!--
@@ -116,7 +116,7 @@
               <div class="control-group">
                 <label class="control-label" for="customer-data">Kundendaten</label>
                 <div class="controls">
-                  <textarea id="customer-data" class=""></textarea>
+                  <textarea id="customer-data" class="input-xlarge" rows="4"></textarea>
                 </div>
               </div>
             </fieldset>

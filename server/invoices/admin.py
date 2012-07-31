@@ -16,7 +16,8 @@ class InvoiceAdmin(admin.ModelAdmin):
     list_display = ("id", "date", "total")
 
 class WineAdmin(admin.ModelAdmin):
-    list_filter = ["category"]
+    list_display = ("description", "category", "volume", "price")
+    list_filter = ["category", "volume"]
 
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(Wine, WineAdmin)

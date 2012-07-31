@@ -24,9 +24,9 @@ class Category(models.Model):
 
 class Wine(models.Model):
     description = models.CharField("Bezeichnung", max_length = 30)
-    volume = models.PositiveIntegerField("Gebinde (ml)")
+    volume = models.PositiveIntegerField("Gebinde (ml)", default = 750)
     price = CurrencyField("Preis", decimal_places = 2, max_digits = 5)
-    category = models.ForeignKey(Category, null = True, verbose_name = "Kategorie")
+    category = models.ForeignKey(Category, blank = True, null = True, verbose_name = "Kategorie")
     
     class Meta:
         verbose_name = "Wein"

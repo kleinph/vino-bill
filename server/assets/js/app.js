@@ -8,7 +8,7 @@ function updateTable(field) {
 	sum = "€ " + (quantity * price).toFixed(2).replace('.', ',');
 	
 	if ($("#wine-table #item-" + id).length == 0) {
-		$("#wine-table tbody").append(
+		$("#wine-table #total").before(
 			"<tr id='item-" + id + "'>" +
 			"  <td>" + ++pos + "</td>" +
 			"  <td>" + name + "</td>" +

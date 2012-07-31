@@ -10,9 +10,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+  
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="//weinguthaider.at">Weingut Haider</a>
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="/admin/">Admin</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
     <div class="container">
       <div class="row">
-        <p>Hallow Welt!</p>
         
         <div class="span6">
         
@@ -82,9 +94,15 @@
                 <td class="right">1</td>
                 <td class="right">€ 75,00</td>
               </tr>-->
+              <tr id="total" class="well">
+                <td colSpan="4" class="right"><strong>Gesamt</strong></td>
+                <td class="right"><strong class="sum">€ 0,00</strong></td>
+              </tr>
             </tbody>
           </table>
+          
           <hr>
+          
           <form class="well form-horizontal" action="/rechnung/submit/" method="post">
             {% csrf_token %}
             
@@ -121,8 +139,8 @@
         </div>
       </div> <!-- .row-fluid -->
       <hr>
-      <footer>
-        © Philipp Klein - 2012
+      <footer style="text-align: center;">
+        © Philipp Klein 2012
       </footer>
       
     </div>

@@ -2,4 +2,4 @@
 @import url("bootstrap-responsive.min.css");
 
 .right { text-align: right !important; }
-.input-micro { width: 30px; }
+.input-micro { width: 30px !important; }

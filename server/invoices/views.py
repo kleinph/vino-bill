@@ -1,4 +1,6 @@
 from invoices.models import Invoice, Wine, Category, InvoicePosition
+from django.http import QueryDict
+from django.http import HttpRequest
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -10,4 +12,5 @@ def index(request):
         context_instance = RequestContext(request))
     
 def submit(request):
-    return HttpResponse("Submit")
+    rebate = request.POST["rebate"]
+    return HttpResponse("Rebate: " + unicode(rebate))

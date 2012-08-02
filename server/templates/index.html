@@ -109,14 +109,14 @@
           
           <hr>
           
-          <form class="well form-horizontal" action="/rechnung/submit/" method="post">
+          <form class="well form-horizontal">
             {% csrf_token %}
             
             <fieldset>
               <div class="control-group">
                 <label class="control-label" for="customer-data">Kundendaten</label>
                 <div class="controls">
-                  <textarea id="customer-data" class="input-xlarge" rows="4"></textarea>
+                  <textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4"></textarea>
                 </div>
               </div>
             </fieldset>
@@ -126,7 +126,7 @@
                 <label class="control-label" for="rebate">Rabatt</label>
                 <div class="controls">
                   <div class="input-append">
-                    <input type="number" id="rebate" class="input-mini"><span class="add-on">%</span>
+                    <input type="number" id="rebate" name="rebate" class="input-mini"><span class="add-on">%</span>
                   </div>
                 </div>
               </div>

@@ -129,7 +129,8 @@
                 <label class="control-label" for="rebate">Rabatt</label>
                 <div class="controls">
                   <div class="input-append">
-                    <input type="number" id="rebate" name="rebate" class="input-mini"><span class="add-on">%</span>
+                    <input type="number" id="rebate" name="rebate" class="input-mini" onChange="invoice.setRebate(this.value)"><!--
+                    --><span class="add-on">%</span>
                   </div>
                 </div>
               </div>

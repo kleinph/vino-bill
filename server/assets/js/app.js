@@ -1,6 +1,7 @@
 function Invoice() {
 	var self = this;
 	var itemCount = 0;
+	var total = 0;
 	
 	this.rebate = 0;
 	this.customerData;
@@ -29,13 +30,38 @@ function Invoice() {
 		calculateTotal();
 	}
 	
-	function setRebate(rebate) { }
+	this.setRebate = function(rebate) {
+		this.rebate = rebate;
+		
+		if (this.rebate == 0) {
+			$("#wine-table #rebate").remove();
+		} else {
+			if ($("#wine-table #rebate").length == 0) {
+				$("#wine-table #total").before(
+					"<tr id='rebate' class='well'>" +
+					"  <td class='right' colSpan='3'>Rabbat</td>" +
+					"  <td class='right rebate'>"+ this.rebate + " %</td>" +
+					"  <td class='right sum'></td>" +
+					"</tr>"
+				);
+			} else {
+				$("#wine-table #rebate .rebate").html(this.rebate + " %");
+			}
+		}
+		
+		calculateTotal();
+	}
 	
 	function calculateTotal() {
 		var total = 0;
 		
 		for (id in self.items) {
 			total += self.items[id].price * self.items[id].quantity;
+		}
+		
+		if (self.rebate != 0) {
+			$("#wine-table #rebate .sum").html("€ " + (total * (self.rebate / 100)).toFixed(2).replace('.', ','));
+			total *= (100 - self.rebate) / 100;
 		}
 		
 		$("#wine-table #total .total").html("€ " + total.toFixed(2).replace('.', ','));
@@ -60,16 +86,16 @@ function InvoiceItem(id, name, quantity, price) {
 	this.price = price;
 	
 	this.updateTable = function() {
-		var sum = (this.quantity * this.price).toFixed(2).replace('.', ',');
+		var sum = "€ " + (this.quantity * this.price).toFixed(2).replace('.', ',');
 		
 		if ($("#wine-table #item-" + this.id).length == 0) {
-			$("#wine-table #total").before(
+			$("#wine-table .well:first").before(
 				"<tr id='item-" + this.id + "'>" +
 				"  <td class='pos'>" + this.pos + "</td>" +
 				"  <td>" + this.name + "</td>" +
 				"  <td class='right'>€ " + this.price.replace('.', ',') + "</td>" +
 				"  <td class='right quantity'>" + this.quantity + "</td>" +
-				"  <td class='right'>€ <span class='sum'>" + sum + "</span></td>" +
+				"  <td class='right sum'>" + sum + "</td>" +
 				"</tr>"
 			);
 		} else {
@@ -127,7 +153,7 @@ $("form").submit(function(event) {
 });
 
 
-// This is neede dot prevent CSRF
+// This is needed to prevent CSRF
 jQuery(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;

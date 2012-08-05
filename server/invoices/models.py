@@ -47,9 +47,9 @@ class Invoice(models.Model):
 
     def _get_total(self):
         total = 0
-        for pos in self.invoice_positions.all():
+        for pos in self.invoiceposition_set.all():
             total += pos.sum
-        return sum
+        return total
     total = property(_get_total)
 
     class Meta:

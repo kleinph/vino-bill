@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from datetime import datetime
 
 def index(request):
     category_list = Category.objects.all()
@@ -13,4 +14,9 @@ def index(request):
     
 def submit(request):
     rebate = request.POST["rebate"]
+    customer_data = request.POST["customer-data"]
+    
+    invoice = Invoice(rebate = rebate, customer = customer_data, date = datetime.today())
+    invoice.save()
+    
     return HttpResponse("Rebate: " + unicode(rebate))

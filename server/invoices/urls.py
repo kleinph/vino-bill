@@ -1,6 +1,5 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns("invoices.views",
     url(r"^$", "index"),
-    url(r"^submit/$", "submit")
 )

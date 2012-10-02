@@ -1,0 +1,17 @@
+<!doctype html>
+<html ng-app>
+	<head>
+		<title>Weingut Haider | Rechnung erstellen</title>
+		
+		<script src="static/lib/angular/angular.js"></script>
+		<script src="static/js/controllers.js"></script>
+	</head>
+	
+	<body ng-controller="WineListCtrl">
+		<ul>
+			<li ng-repeat="wine in wines">
+				{{wine.description}} - {{wine.volume}} l - € {{wine.price.replace(".", ",")}}
+			</li>
+		</ul>
+	</body
+</html>

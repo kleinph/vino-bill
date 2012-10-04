@@ -5,14 +5,14 @@ from invoices.models import Category, Wine, Invoice, InvoicePosition
 from pretty_json_serializer import PrettyJSONSerializer
 
 class WineResource(ModelResource):
-    category = fields.ToOneField("api.api.CategoryResource", "category", full = True, null = True)
+    category = fields.ToOneField("api.api.CategoryResource", "category", null = True)
     
     class Meta:
         queryset = Wine.objects.all()
         serializer = PrettyJSONSerializer()
         
 class CategoryResource(ModelResource):
-    wines = fields.ToManyField(WineResource, "wine_set")
+    wines = fields.ToManyField(WineResource, "wine_set", full = True)
 
     class Meta:
         queryset = Category.objects.all()

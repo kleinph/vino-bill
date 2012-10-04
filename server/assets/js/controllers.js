@@ -1,6 +1,6 @@
 function WineListCtrl($scope, $http) {
-	$http.get("http://localhost:8080/api/v1/wine/").success(function(data) {
-		$scope.wines = data.objects;
+	$http.get("http://localhost:8000/api/v1/category/").success(function(data) {
+		$scope.categories = data.objects;
 	});
 
 	// $scope.wines = [

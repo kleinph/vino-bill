@@ -1,144 +1,144 @@
 <!doctype html>
 <html xmlns:ng="http://angularjs.org" lang="de" ng-app="invoiceApp">
-    <head>
-        <meta charset="utf-8">
-        <title>Weingut Haider | Rechnung erstellen</title>
+	<head>
+		<meta charset="utf-8">
+		<title>Weingut Haider | Rechnung erstellen</title>
 
-        <link rel="stylesheet" href="/static/css/style.css">
-        <link rel="shortcut icon" href="/static/img/favicon.ico">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="shortcut icon" href="/static/img/favicon.ico">
 
-        <script src="static/lib/angular/angular.js"></script>
+		<script src="static/lib/angular/angular.js"></script>
 		<script src="static/lib/angular/angular-resource.js"></script>
 		<script src="static/lib/angular/i18n/angular-locale_de-at.js"></script>
-        <script src="static/js/controllers.js"></script>
+		<script src="static/js/controllers.js"></script>
 		<script src="static/js/services.js"></script>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
 
-        <div class="navbar">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="//weinguthaider.at">Weingut Haider</a>
-                    <ul class="nav pull-right">
-                        <li class="divider-vertical"></li>
-                        <li><a href="/admin/">Admin</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="//weinguthaider.at">Weingut Haider</a>
+					<ul class="nav pull-right">
+						<li class="divider-vertical"></li>
+						<li><a href="/admin/">Admin</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
 
-        <div class="container">
-            <div class="row">
+		<div class="container">
+			<div class="row">
+				<div class="span6">
+					<div class="page-header">
+						<h2>Weine</h2>
+					</div>
+					<ul class="accordion unstyled" id="wine-list" ng-controller="CategoryListCtrl">
+						<li class="accordion-group" ng-repeat="category in categories">
+							<div class="accordion-heading">
+								<a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" href="#collapse-{{category.id}}">
+									{{category.name}}
+								</a>
+							</div>
+							<div class="accordion-body collapse" id="collapse-{{category.id}}" style="height: 0px;">
+								<ul class="accordion-inner">
+									<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
+										<strong>{{wine.description}}</strong><br>
+										{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
+										<span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
+											<button class="btn" ng-click="decrease()"><i class="icon-minus">-</i></button><!--
+											--><input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()"><!--
+											--><button class="btn" ng-click="increase()"><i class="icon-plus">+</i></button>
+										</span>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
 
-                <div class="span6">
-
-                    <div class="page-header">
-                        <h2>Weine</h2>
-                    </div>
-                    <ul class="accordion unstyled" id="wine-list" ng-controller="CategoryListCtrl">
-                        <li class="accordion-group" ng-repeat="category in categories">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" href="#collapse-{{category.id}}">
-                                    {{category.name}}
-                                </a>
-                            </div>
-                            <div class="accordion-body collapse" id="collapse-{{category.id}}" style="height: 0px;">
-                                <ul class="accordion-inner">
-                                    <li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
-                                        <strong>{{wine.description}}</strong><br>
-                                        {{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
-                                        <span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
-                                            <button class="btn" ng-click="decrease()"><i class="icon-minus">-</i></button><!--
-                                         --><input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()"><!--
-                                         --><button class="btn" ng-click="increase()"><i class="icon-plus">+</i></button>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div id="invoice" class="span6" ng-controller="InvoiceCtrl">
-                    <div class="page-header">
-                        <h2>Übersicht</h2>
-                    </div>
-                    <table id="wine-table" class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Bezeichnung</th>
-                                <th class="right">Preis</th>
-                                <th class="right">Anzahl</th>
-                                <th class="right">Summe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="(id, item) in items | orderBy:'item.pos'">
-                              <td>{{item.pos}}</td>
-                              <td>{{item.wine.description}}</td>
-                              <td class="right">{{item.wine.price | currency: "€ "}}</td>
-                              <td class="right">{{item.count}}</td>
-                              <td class="right">{{item.sum() | currency: "€ "}}</td>
-                            </tr>
+				<div id="invoice" class="span6" ng-controller="InvoiceCtrl">
+					<div class="page-header">
+						<h2>Übersicht</h2>
+					</div>
+					<table id="wine-table" class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Bezeichnung</th>
+								<th class="right">Preis</th>
+								<th class="right">Anzahl</th>
+								<th class="right">Summe</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="(id, item) in items | orderBy:'item.pos'">
+								<td>{{item.pos}}</td>
+								<td>{{item.wine.description}}</td>
+								<td class="right">{{item.wine.price | currency: "€ "}}</td>
+								<td class="right">{{item.count}}</td>
+								<td class="right">{{item.sum() | currency: "€ "}}</td>
+							</tr>
 							<tr class="well" ng-show="rebateInEuro()">
 								<td class="right" colSpan="3">Rabbat</td>
 								<td class="right">{{rebate}} %</td>
 								<td class="right">{{rebateInEuro() | currency: "€ "}}</td>
 							</tr>
-                            <tr class="well">
-                                <td colSpan="4" class="right"><strong>Gesamt</strong></td>
-                                <td class="right"><strong>{{total() | currency: "€ "}}</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
+							<tr class="well">
+								<td colSpan="4" class="right"><strong>Gesamt</strong></td>
+								<td class="right"><strong>{{total() | currency: "€ "}}</strong></td>
+							</tr>
+						</tbody>
+					</table>
 
-                    <hr>
+					<hr>
 
-                    <form class="well form-horizontal">
+					<form class="well form-horizontal">
 
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="customer-data">Kundendaten</label>
-                                <div class="controls">
-                                    <textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4"></textarea>
-                                </div>
-                            </div>
-                        </fieldset>
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="customer-data">Kundendaten</label>
+								<div class="controls">
+									<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4"></textarea>
+								</div>
+							</div>
+						</fieldset>
 
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="rebate">Rabatt</label>
-                                <div class="controls">
-                                    <div class="input-append">
-                                        <input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate"><!--
-                                        --><span class="add-on">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="rebate">Rabatt</label>
+								<div class="controls">
+									<div class="input-append">
+										<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate"><!--
+										--><span class="add-on">%</span>
+									</div>
+								</div>
+							</div>
+						</fieldset>
 
-                        <fieldset>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <input type="submit" class="btn btn-primary" value="Rechnung erstellen">
-                                    <button class="btn">Abbrechen</button>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
+						<fieldset>
+							<div class="control-group">
+								<div class="controls">
+									<input type="submit" class="btn btn-primary" value="Rechnung erstellen">
+									<button class="btn">Abbrechen</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
 
-                </div>
-            </div> <!-- .row-fluid -->
-            <hr>
-            <footer style="text-align: center;">
-                © Philipp Klein 2012
-            </footer>
-
-        </div>
-        <script src="/static/js/jquery-1.7.2.min.js"></script>
-        <script src="/static/lib/bootstrap/bootstrap.min.js"></script>
-    </body>
+				</div>
+			</div> <!-- .row-fluid -->
+			
+			<hr>
+			
+			<footer style="text-align: center;">
+				© Philipp Klein 2012
+			</footer>
+		</div>
+		
+		<script src="/static/js/jquery-1.7.2.min.js"></script>
+		<script src="/static/lib/bootstrap/bootstrap.min.js"></script>
+	</body>
 </html>

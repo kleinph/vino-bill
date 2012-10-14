@@ -4,6 +4,8 @@
 .right { text-align: right !important; }
 .input-micro { width: 30px !important; }
 
+.accordion-inner li { margin-bottom: 10px; }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
 	/* display: none; <- Crashes Chrome on hover */

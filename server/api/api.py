@@ -16,13 +16,20 @@ class CategoryResource(ModelResource):
 
     class Meta:
         queryset = Category.objects.all()
-        
-class InvoiceResource(ModelResource):
-    class Meta:
-        queryset = Invoice.objects.all()
-        authorization = Authorization()
-        
+        serializer = PrettyJSONSerializer()
+
 class InvoicePositionResource(ModelResource):
+    wine = fields.ToOneField(WineResource, "wine", full = True)
+    
     class Meta:
         queryset = InvoicePosition.objects.all()
+        authorization = Authorization()
+        serializer = PrettyJSONSerializer()
+        
+class InvoiceResource(ModelResource):
+    items = fields.ToManyField(InvoicePositionResource, "invoiceposition_set", full = True)
+    
+    class Meta:
+        queryset = Invoice.objects.all()
+        serializer = PrettyJSONSerializer()
         authorization = Authorization()

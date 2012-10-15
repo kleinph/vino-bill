@@ -19,7 +19,8 @@ class CategoryResource(ModelResource):
         serializer = PrettyJSONSerializer()
 
 class InvoicePositionResource(ModelResource):
-    wine = fields.ToOneField(WineResource, "wine", full = True)
+    wine = fields.ToOneField(WineResource, "wine")
+    invoice = fields.ToOneField("api.api.InvoiceResource", "invoice")
     
     class Meta:
         queryset = InvoicePosition.objects.all()
@@ -27,7 +28,7 @@ class InvoicePositionResource(ModelResource):
         serializer = PrettyJSONSerializer()
         
 class InvoiceResource(ModelResource):
-    items = fields.ToManyField(InvoicePositionResource, "invoiceposition_set", full = True)
+    items = fields.ToManyField(InvoicePositionResource, "invoiceposition_set")
     
     class Meta:
         queryset = Invoice.objects.all()

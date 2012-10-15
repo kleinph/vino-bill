@@ -101,7 +101,8 @@
 							<div class="control-group">
 								<label class="control-label" for="customer-data">Kundendaten</label>
 								<div class="controls">
-									<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4"></textarea>
+									<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="customerData">
+									</textarea>
 								</div>
 							</div>
 						</fieldset>
@@ -121,8 +122,8 @@
 						<fieldset>
 							<div class="control-group">
 								<div class="controls">
-									<input type="submit" class="btn btn-primary" value="Rechnung erstellen">
-									<button class="btn">Abbrechen</button>
+									<button class="btn btn-primary" ng-disabled="!itemCount" ng-click="submit()">Rechnung erstellen</button>
+									<button class="btn" ng-click="reset()">Abbrechen</button>
 								</div>
 							</div>
 						</fieldset>

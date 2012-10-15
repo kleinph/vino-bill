@@ -1,161 +1,145 @@
 <!doctype html>
-<html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <title>Weingut Haider | Rechnung erstellen</title>
-    
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="shortcut icon" href="/static/img/favicon.ico">
-    
-    <script type="text/javascript" src="/static/lib/blackbird.js/blackbird.js"></script>
-    <link type="text/css" rel="Stylesheet" href="/static/lib/blackbird.js/blackbird.css" />
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-  
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="//weinguthaider.at">Weingut Haider</a>
-          <ul class="nav pull-right">
-            <li class="divider-vertical"></li>
-            <li><a href="/admin/">Admin</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  
-    <div class="container">
-      <div class="row">
-        
-        <div class="span6">
-        
-          <div class="page-header">
-            <h2>Weine</h2>
-          </div>
-          {% if categories %}
-          <ul class="accordion unstyled" id="wine-list">
-            {% for category in categories %}
-            <li class="accordion-group">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" href="#collapse-{{ category.name }}">
-                  {{ category.name }}
-                </a>
-              </div>
-                {% if wines %}
-                <div class="accordion-body collapse" id="collapse-{{ category.name }}" style="height: 0px;">
-                  <ul class="accordion-inner">
-                    {% for wine in wines %}
-                      {% if wine.category == category %}
-                      <li id="wine-{{ wine.id }}" style="margin-bottom: 10px;">
-                        <strong class="description">{{ wine.description }}</strong><br>
-                        {{ wine.volume_in_l }} l – € <span class="price">{{ wine.price }}</span>
-                        <span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
-                          <button id="decrease-{{ wine.id }}" class="btn" onClick="decrease(this.id)"><i class="icon-minus">-</i></button><!--
-                       --><input id="quantity-{{ wine.id }}" class="input-micro" type="number" onChange="updateTable(this.id)"><!--
-                       --><button id="increase-{{ wine.id }}" class="btn" onClick="increase(this.id)"><i class="icon-plus">+</i></button>
-                        </span>
-                      </li>{% endif %}
-                    {% endfor %}
-                  </ul>
-                </div>  
-                {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
-        
-        <div class="span6">
-          <div class="page-header">
-            <h2>Übersicht</h2>
-          </div>
-          <table id="wine-table" class="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Bezeichnung</th>
-                <th class="right">Preis</th>
-                <th class="right">Anzahl</th>
-                <th class="right">Summe</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!--<tr>
-                <td>1</td>
-                <td>Federwolke 2011</td>
-                <td class="right">€ 3,50</td>
-                <td class="right">3</td>
-                <td class="right">€ 10,50</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Merlot 2010</td>
-                <td class="right">€ 12,00</td>
-                <td class="right">2</td>
-                <td class="right">€ 24,00</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Two Horses Lake Angle 1989</td>
-                <td class="right">€ 75,00</td>
-                <td class="right">1</td>
-                <td class="right">€ 75,00</td>
-              </tr>-->
-              <tr id="total" class="well">
-                <td colSpan="4" class="right"><strong>Gesamt</strong></td>
-                <td class="right"><strong class="total">€ 0,00</strong></td>
-              </tr>
-            </tbody>
-          </table>
-          
-          <hr>
-          
-          <form class="well form-horizontal">
-            {% csrf_token %}
-            
-            <fieldset>
-              <div class="control-group">
-                <label class="control-label" for="customer-data">Kundendaten</label>
-                <div class="controls">
-                  <textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4"></textarea>
-                </div>
-              </div>
-            </fieldset>
-            
-            <fieldset>
-              <div class="control-group">
-                <label class="control-label" for="rebate">Rabatt</label>
-                <div class="controls">
-                  <div class="input-append">
-                    <input type="number" id="rebate" name="rebate" class="input-mini" onChange="invoice.setRebate(this.value)"><!--
-                    --><span class="add-on">%</span>
-                  </div>
-                </div>
-              </div>
-            </fieldset>
-            
-            <fieldset>
-              <div class="control-group">
-                <div class="controls">
-                  <input type="submit" class="btn btn-primary" value="Rechnung erstellen">
-                  <button class="btn">Abbrechen</button>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-          
-        </div>
-      </div> <!-- .row-fluid -->
-      <hr>
-      <footer style="text-align: center;">
-        © Philipp Klein 2012
-      </footer>
-      
-    </div>
-    <script src="/static/js/jquery-1.7.2.min.js"></script>
-    <script src="/static/lib/bootstrap/bootstrap.min.js"></script>
-    <script src="/static/js/app.js"></script>
-  </body>
+<html xmlns:ng="http://angularjs.org" lang="de" ng-app="invoiceApp">
+	<head>
+		<meta charset="utf-8">
+		<title>Weingut Haider | Rechnung erstellen</title>
+
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="shortcut icon" href="/static/img/favicon.ico">
+
+		<script src="static/lib/angular/angular.js"></script>
+		<script src="static/lib/angular/angular-resource.js"></script>
+		<script src="static/lib/angular/i18n/angular-locale_de-at.js"></script>
+		<script src="static/js/controllers.js"></script>
+		<script src="static/js/services.js"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="//weinguthaider.at">Weingut Haider</a>
+					<ul class="nav pull-right">
+						<li class="divider-vertical"></li>
+						<li><a href="/admin/">Admin</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="span6">
+					<div class="page-header">
+						<h2>Weine</h2>
+					</div>
+					<ul class="accordion unstyled" id="wine-list" ng-controller="CategoryListCtrl">
+						<li class="accordion-group" ng-repeat="category in categories">
+							<div class="accordion-heading">
+								<a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" href="#collapse-{{category.id}}">
+									{{category.name}}
+								</a>
+							</div>
+							<div class="accordion-body collapse" id="collapse-{{category.id}}" style="height: 0px;">
+								<ul class="accordion-inner">
+									<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
+										<strong>{{wine.description}}</strong><br>
+										{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
+										<span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
+											<button class="btn" ng-click="decrease()"><i class="icon-minus">-</i></button><!--
+											--><input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()"><!--
+											--><button class="btn" ng-click="increase()"><i class="icon-plus">+</i></button>
+										</span>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div id="invoice" class="span6" ng-controller="InvoiceCtrl">
+					<div class="page-header">
+						<h2>Übersicht</h2>
+					</div>
+					<table id="wine-table" class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Bezeichnung</th>
+								<th class="right">Preis</th>
+								<th class="right">Anzahl</th>
+								<th class="right">Summe</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="(id, item) in items | orderBy:'item.pos'">
+								<td>{{item.pos}}</td>
+								<td>{{item.wine.description}}</td>
+								<td class="right">{{item.wine.price | currency: "€ "}}</td>
+								<td class="right">{{item.count}}</td>
+								<td class="right">{{item.sum() | currency: "€ "}}</td>
+							</tr>
+							<tr class="well" ng-show="rebateInEuro()">
+								<td class="right" colSpan="3">Rabbat</td>
+								<td class="right">{{rebate}} %</td>
+								<td class="right">{{rebateInEuro() | currency: "€ "}}</td>
+							</tr>
+							<tr class="well">
+								<td colSpan="4" class="right"><strong>Gesamt</strong></td>
+								<td class="right"><strong>{{total() | currency: "€ "}}</strong></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<hr>
+
+					<form class="well form-horizontal">
+
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="customer-data">Kundendaten</label>
+								<div class="controls">
+									<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="customerData">
+									</textarea>
+								</div>
+							</div>
+						</fieldset>
+
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="rebate">Rabatt</label>
+								<div class="controls">
+									<div class="input-append">
+										<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate"><!--
+										--><span class="add-on">%</span>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<fieldset>
+							<div class="control-group">
+								<div class="controls">
+									<button class="btn btn-primary" ng-disabled="!itemCount" ng-click="submit()">Rechnung erstellen</button>
+									<button class="btn" ng-click="reset()">Abbrechen</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+
+				</div>
+			</div> <!-- .row-fluid -->
+			
+			<hr>
+			
+			<footer style="text-align: center;">
+				© Philipp Klein 2012
+			</footer>
+		</div>
+		
+		<script src="/static/js/jquery-1.7.2.min.js"></script>
+		<script src="/static/lib/bootstrap/bootstrap.min.js"></script>
+	</body>
 </html>

@@ -18,7 +18,7 @@ invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $roo
 	);
 });
 
-invoiceApp.controller("WineCtrl", function WineCtrl($scope, Wine) {
+invoiceApp.controller("WineCtrl", function WineCtrl($scope, $rootScope, Wine) {
 	$scope.quantity = 0;
 	
 	$scope.$on("reset", function() { $scope.quantity = 0; });
@@ -34,17 +34,44 @@ invoiceApp.controller("WineCtrl", function WineCtrl($scope, Wine) {
 	};
 	
 	$scope.updateItems = function() {
-		// FIXME ugly hack for "inter-controller-communication"
-		angular.element($("#invoice")).scope().updateItem($scope.wine, $scope.quantity);
+		$rootScope.$broadcast("update-item", {wine: $scope.wine, quantity: $scope.quantity});
 	};
 });
 
 invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 	/*
 	 * lookup table for the indices of the invoice items
-	 * I know: a little bit ugly, but the best solution as far as I know
+	 * a little bit ugly, but the best solution as far as I know
 	 */
 	var itemsLookup = {};
+	
+	/*
+	 * constructor function for new invoice items
+	 */
+	function item(wine, quantity) {
+		this.wine = wine;
+		this.quantity = quantity;
+		this.sum = function() {
+			if (wine) return this.wine.price * this.quantity;
+			return 0;
+		};
+	};
+	
+	var updateItem = function(wine, quantity) {
+		var idx = itemsLookup[wine.id];
+		
+		if (quantity === 0) {
+			delete $scope.items.splice(idx, 1);
+			delete itemsLookup[wine.id];
+		} else {
+			if (isNaN(idx)) {
+				itemsLookup[wine.id] = $scope.items.length;
+				$scope.items.push(new item(wine, quantity));
+			} else {
+				$scope.items[idx].quantity = quantity;
+			}
+		}
+	};
 	
 	var reset = function() {
 		itemsLookup = {};
@@ -55,10 +82,12 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 		// TODO try to collapse the open accordion
 		// $(".collapse").collapse("hide");
 	};
+	reset();
 	
 	$scope.$on("reset", reset);
-	
-	reset();
+	$scope.$on("update-item", function(event, data) {
+		updateItem(data.wine, data.quantity);
+	});
 	
 	$scope.submit = function() {
 		var items = [];
@@ -84,34 +113,6 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 				// TODO error handling
 			}
 		);
-	};
-	
-	/*
-	 * constructor function for new invoice items
-	 */
-	function item(wine, quantity) {
-		this.wine = wine;
-		this.quantity = quantity;
-		this.sum = function() {
-			if (wine) return this.wine.price * this.quantity;
-			return 0;
-		};
-	};
-	
-	$scope.updateItem = function(wine, quantity) {
-		var idx = itemsLookup[wine.id];
-		
-		if (quantity === 0) {
-			delete $scope.items.splice(idx, 1);
-			delete itemsLookup[wine.id];
-		} else {
-			if (isNaN(idx)) {
-				itemsLookup[wine.id] = $scope.items.length;
-				$scope.items.push(new item(wine, quantity));
-			} else {
-				$scope.items[idx].quantity = quantity;
-			}
-		}
 	};
 	
 	$scope.sum = function() {

@@ -32,12 +32,18 @@ invoiceApp.controller("WineCtrl", function WineCtrl($scope, $timeout, Wine) {
 
 invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, InvoicePosition) {
 	/*
+	 * lookup table for the indices of the invoice items
+	 * I know: a little bit ugly, but the best solution as far as I know
+	 */
+	var itemsLookup = {};
+	
+	/*
 	 * function to initialize and reset the form data
 	 * TODO reset also the data in the winelist
 	 */
 	$scope.reset = function() {
-		$scope.items = {};
-		$scope.itemCount = 0;
+		$scope.items = [];
+		itemsLookup = {};
 		$scope.rebate = 0;
 		$scope.customerData = "";
 	};
@@ -45,10 +51,10 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Invoi
 	$scope.submit = function() {
 		var items = [];
 		
-		for (id in $scope.items) {
+		for each (var item in $scope.items) {
 			items.push({
-				quantity: $scope.items[id].count,
-				wine: $scope.items[id].wine.resource_uri
+				quantity: item.quantity,
+				wine: item.wine.resource_uri
 			});
 		}
 		
@@ -74,49 +80,35 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Invoi
 	 * constructor function for new invoice items
 	 */
 	function item(wine, quantity) {
-		this.pos = ++$scope.itemCount;
 		this.wine = wine;
-		this.count = quantity;
+		this.quantity = quantity;
 		this.sum = function() {
-			if (wine) return this.wine.price * this.count;
+			if (wine) return this.wine.price * this.quantity;
 			return 0;
 		};
 	};
 	
-	/*
-	 * helper function to update the indices after item removal
-	 */
-	function updateIndices(startIndex) {
-		for (id in $scope.items) {
-			if ($scope.items[id].pos > startIndex) {
-				--$scope.items[id].pos;
-			}
-		}
-	};
-	
 	$scope.updateItem = function(wine, quantity) {
+		var idx = itemsLookup[wine.id];
+		
 		if (quantity === 0) {
-			updateIndices($scope.items[wine.id].pos);
-			delete $scope.items[wine.id];
-			$scope.itemCount--;
+			delete $scope.items.splice(idx, 1);
+			delete itemsLookup[wine.id];
 		} else {
-			if (!$scope.items[wine.id]) {
-				$scope.items[wine.id] = new item(wine, quantity);
+			if (isNaN(idx)) {
+				itemsLookup[wine.id] = $scope.items.length;
+				$scope.items.push(new item(wine, quantity));
 			} else {
-				$scope.items[wine.id].count = quantity;
+				$scope.items[idx].quantity = quantity;
 			}
 		}
 	};
 	
 	$scope.sum = function() {
-		if ($scope.itemCount <= 0) {
-			return 0;
-		}
-		
 		var sum = 0;
 		
-		for (id in $scope.items) {
-			sum += $scope.items[id].sum();
+		for each (var item in $scope.items) {
+			sum += item.sum();
 		}
 		return sum;
 	};

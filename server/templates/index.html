@@ -74,11 +74,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="(id, item) in items | orderBy:'item.pos'">
-								<td>{{item.pos}}</td>
+							<tr ng-repeat="item in items">
+								<td>{{$index + 1}}</td>
 								<td>{{item.wine.description}}</td>
 								<td class="right">{{item.wine.price | currency: "€ "}}</td>
-								<td class="right">{{item.count}}</td>
+								<td class="right">{{item.quantity}}</td>
 								<td class="right">{{item.sum() | currency: "€ "}}</td>
 							</tr>
 							<tr class="well" ng-show="rebateInEuro()">
@@ -122,7 +122,7 @@
 						<fieldset>
 							<div class="control-group">
 								<div class="controls">
-									<button class="btn btn-primary" ng-disabled="!itemCount" ng-click="submit()">Rechnung erstellen</button>
+									<button class="btn btn-primary" ng-disabled="!items.length" ng-click="submit()">Rechnung erstellen</button>
 									<button class="btn" ng-click="reset()">Abbrechen</button>
 								</div>
 							</div>

@@ -1,6 +1,13 @@
 var invoiceApp = angular.module("invoiceApp", ["invoiceServices"]);
 
-invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, Category) {
+invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $rootScope, Category) {
+	/*
+	 * app wide reset function
+	 */
+	$rootScope.reset = function() {
+		$rootScope.$broadcast("reset");
+	};
+	
 	Category.query({},
 		function(data) {
 			$scope.categories = data.objects;
@@ -11,9 +18,11 @@ invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, Cate
 	);
 });
 
-invoiceApp.controller("WineCtrl", function WineCtrl($scope, $timeout, Wine) {
+invoiceApp.controller("WineCtrl", function WineCtrl($scope, Wine) {
 	$scope.quantity = 0;
 	
+	$scope.$on("reset", function() { $scope.quantity = 0; });
+		
 	$scope.increase = function() {
 		$scope.quantity++;
 		$scope.updateItems();
@@ -30,23 +39,26 @@ invoiceApp.controller("WineCtrl", function WineCtrl($scope, $timeout, Wine) {
 	};
 });
 
-invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, InvoicePosition) {
+invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 	/*
 	 * lookup table for the indices of the invoice items
 	 * I know: a little bit ugly, but the best solution as far as I know
 	 */
 	var itemsLookup = {};
 	
-	/*
-	 * function to initialize and reset the form data
-	 * TODO reset also the data in the winelist
-	 */
-	$scope.reset = function() {
-		$scope.items = [];
+	var reset = function() {
 		itemsLookup = {};
+		$scope.items = [];
 		$scope.rebate = 0;
 		$scope.customerData = "";
+		
+		// TODO try to collapse the open accordion
+		// $(".collapse").collapse("hide");
 	};
+	
+	$scope.$on("reset", reset);
+	
+	reset();
 	
 	$scope.submit = function() {
 		var items = [];
@@ -73,8 +85,6 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Invoi
 			}
 		);
 	};
-	
-	$scope.reset();
 	
 	/*
 	 * constructor function for new invoice items

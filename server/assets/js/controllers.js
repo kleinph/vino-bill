@@ -11,7 +11,7 @@ invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, Cate
 	);
 });
 
-invoiceApp.controller("WineCtrl", function WineListCtrl($scope, $timeout, Wine) {
+invoiceApp.controller("WineCtrl", function WineCtrl($scope, $timeout, Wine) {
 	$scope.quantity = 0;
 	
 	$scope.increase = function() {
@@ -43,31 +43,27 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Invoi
 	};
 	
 	$scope.submit = function() {
+		var items = [];
+		
+		for (id in $scope.items) {
+			items.push({
+				quantity: $scope.items[id].count,
+				wine: $scope.items[id].wine.resource_uri
+			});
+		}
+		
 		Invoice.create({},
 			{
 				date: new Date(),
 				customer: $scope.customerData,
 				rebate: $scope.rebate,
-				items: []
+				items: items
 			},
-			function(object, headers) {
-				var items = [];
-				var invoiceId = headers("Location");
-				
-				for (id in $scope.items) {
-					items.push({
-						// some regex to strip the host part of the url
-						invoice: invoiceId.replace(/^.*?:\/\/.*?(\/.*)$/, '$1'),
-						quantity: $scope.items[id].count,
-						wine: $scope.items[id].wine.resource_uri
-					});
-				}
-				
-				Invoice.save({}, {
-					// FIXME ugly hack to id of invoice out of the url
-					id: invoiceId.split("/")[6],
-					items: items
-				}, function() { $scope.reset(); });
+			function(data, headers) {
+				$scope.reset();
+			},
+			function(data, headers) {
+				// TODO error handling
 			}
 		);
 	};

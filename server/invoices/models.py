@@ -49,7 +49,7 @@ class Invoice(models.Model):
         total = 0
         for pos in self.invoiceposition_set.all():
             total += pos.sum
-        return total
+        return total * (100 - self.rebate) / 100
     total = property(_get_total)
 
     class Meta:

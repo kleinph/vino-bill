@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<title>Druckansicht Rechnung {{ invoice.id }}</title>
+		
+		<!--<link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
+		<link rel="stylesheet" href="/static/css/print.css">
+	</head>
+	<body>
+		<div class="container">
+			Rechnungsnummer: {{ invoice.id }}
+			<hr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Pos</th>
+						<th>Bezeichnung</th>
+						<th>Preis</th>
+						<th>Anzahl</th>
+						<th>Summe</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in invoice.invoiceposition_set.all %}
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ item.wine.description }}</td>
+						<td>{{ item.wine.price }}</td>
+						<td>{{ item.quantity }}</td>
+						<td>{{ item.sum }}</td>
+					</tr>
+					{% endfor %}
+					{% if invoice.rebate > 0 %}
+					<tr>
+						<td colspan="3">Rabbat</td>
+						<td>{{ invoice.rebate }}</td>
+						<td>€</td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td colspan="4">Gesamt</td>
+						<td>{{ invoice.total }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

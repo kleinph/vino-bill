@@ -12,6 +12,7 @@
 		<script src="static/lib/angular/i18n/angular-locale_de-at.js"></script>
 		<script src="static/js/controllers.js"></script>
 		<script src="static/js/services.js"></script>
+		<script src="static/js/utils.js"></script>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
@@ -30,6 +31,30 @@
 		</div>
 
 		<div class="container">
+			<div class="row">
+				<div class="span6 offset3">
+					
+					<div id="alert-error" class="alert alert-block alert-error fade in hide">
+						<h4 class="alert-heading">Fehler!</h4>
+						<p>Daten konnten nicht übermittelt werden.</p>
+						<p>
+							<button type="button" class="btn btn-danger" ng-click="reset()" onclick="dismissAlert('alert-error')">
+								Zurücksetzen
+							</button>
+							<button type="button" class="btn btn-success" ng-click="submit()" onclick="dismissAlert('alert-error')">
+								Erneut versuchen
+							</button>
+						</p>
+					</div>
+					
+					<div id="alert-success" class="alert alert-block alert-success fade in hide">
+						<button type="button" class="close" onclick="dismissAlert('alert-success')">×</button>
+						Alle Daten wurden erfolgreich übermittelt. Ausdruck wurde gestartet.
+					</div>
+					
+				</div>
+			</div>
+		
 			<div class="row">
 				<div class="span6">
 					<div class="page-header">
@@ -122,8 +147,8 @@
 						<fieldset>
 							<div class="control-group">
 								<div class="controls">
-									<button class="btn btn-primary" ng-disabled="!items.length" ng-click="submit()">Rechnung erstellen</button>
-									<button class="btn" ng-click="reset()">Abbrechen</button>
+									<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+									<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
 								</div>
 							</div>
 						</fieldset>

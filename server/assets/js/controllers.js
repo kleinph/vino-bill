@@ -8,17 +8,14 @@ invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $roo
 		$rootScope.$broadcast("reset");
 	};
 	
-	Category.query({},
-		function(data) {
-			$scope.categories = data.objects;
-		},
-		function(data){
-			$scope.categories = [];
-		}
-	);
+	Category.query({}, function(data) {
+		$scope.categories = data.objects;
+	}, function(data){
+		$scope.categories = [];
+	});
 });
 
-invoiceApp.controller("WineCtrl", function WineCtrl($scope, $rootScope, Wine) {
+invoiceApp.controller("WineCtrl", function WineCtrl($scope, $rootScope) {
 	$scope.quantity = 0;
 	
 	$scope.$on("reset", function() { $scope.quantity = 0; });
@@ -78,6 +75,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 		$scope.items = [];
 		$scope.rebate = 0;
 		$scope.customerData = "";
+		$scope.isSubmitting = false;
 		
 		// TODO try to collapse the open accordion
 		// $(".collapse").collapse("hide");
@@ -91,35 +89,35 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 	
 	$scope.submit = function() {
 		var items = [];
+		$scope.isSubmitting = true;
 		
-		for each (var item in $scope.items) {
+		for (var i in $scope.items) {
 			items.push({
-				quantity: item.quantity,
-				wine: item.wine.resource_uri
+				quantity: $scope.items[i].quantity,
+				wine: $scope.items[i].wine.resource_uri
 			});
 		}
 		
-		Invoice.create({},
-			{
-				date: new Date(),
-				customer: $scope.customerData,
-				rebate: $scope.rebate,
-				items: items
-			},
-			function(data, headers) {
-				$scope.reset();
-			},
-			function(data, headers) {
-				// TODO error handling
-			}
-		);
+		Invoice.create({}, {
+			date: new Date(),
+			customer: $scope.customerData,
+			rebate: $scope.rebate,
+			items: items
+		}, function(data, headers) {
+			$scope.reset();
+			$(".alert-success").fadeIn();
+		}, function(data, headers) {
+			// TODO error handling
+			$scope.isSubmitting = false;
+			$(".alert-error").fadeIn();
+		});
 	};
 	
 	$scope.sum = function() {
 		var sum = 0;
 		
-		for each (var item in $scope.items) {
-			sum += item.sum();
+		for (var i in $scope.items) {
+			sum += $scope.items[i].sum();
 		}
 		return sum;
 	};

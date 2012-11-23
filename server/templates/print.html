@@ -8,17 +8,29 @@
 		<link rel="stylesheet" href="/static/css/print.css">
 	</head>
 	<body>
+		<header>
+			<img src="" alt="">
+			<h1>Weingut Haider</h1>
+		</header>
 		<div class="container">
-			Rechnungsnummer: {{ invoice.id }}
+			<address><p>
+				Weingut Haider<br>
+				Seegasse 16<br>
+				7142 Illmitz<br>
+				Österreich
+			</p><address>
+			<strong>Rechnungs-Nr.:</strong> {{ invoice.id }}<br>
+			<strong>Rechnungsdatum:</strong> {{ invoice.date }}
+			<p><pre>{{ invoice.customer }}</pre></p>
 			<hr>
 			<table class="table">
 				<thead>
 					<tr>
 						<th>Pos</th>
 						<th>Bezeichnung</th>
-						<th>Preis</th>
-						<th>Anzahl</th>
-						<th>Summe</th>
+						<th class="right">Preis</th>
+						<th class="right">Anzahl</th>
+						<th class="right">Summe</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -26,21 +38,26 @@
 					<tr>
 						<td>{{ forloop.counter }}</td>
 						<td>{{ item.wine.description }}</td>
-						<td>{{ item.wine.price }}</td>
-						<td>{{ item.quantity }}</td>
-						<td>{{ item.sum }}</td>
+						<td class="right">€ {{ item.wine.price }}</td>
+						<td class="right">{{ item.quantity }}</td>
+						<td class="right">€ {{ item.sum }}</td>
 					</tr>
 					{% endfor %}
+					<tr></tr>
 					{% if invoice.rebate > 0 %}
 					<tr>
-						<td colspan="3">Rabbat</td>
-						<td>{{ invoice.rebate }}</td>
-						<td>€</td>
+						<td class="right" colspan="3">Rabbat</td>
+						<td class="right">{{ invoice.rebate }} %</td>
+						<td class="right">€</td>
 					</tr>
 					{% endif %}
 					<tr>
-						<td colspan="4">Gesamt</td>
-						<td>{{ invoice.total }}</td>
+						<td class="right" colspan="4">MWST 20%</td>
+						<td class="right">€</td>
+					</tr>
+					<tr>
+						<td class="right" colspan="4">Gesamt</td>
+						<td class="right">€ {{ invoice.total }}</td>
 					</tr>
 				</tbody>
 			</table>

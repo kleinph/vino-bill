@@ -2,6 +2,7 @@
 
 from django.db import models
 from decimal import Decimal
+from server import settings
 
 class CurrencyField(models.DecimalField):
     __metaclass__ = models.SubfieldBase
@@ -44,12 +45,25 @@ class Invoice(models.Model):
     customer = models.TextField("Kundendaten", blank = True)
     rebate = models.PositiveIntegerField("Rabatt (%)")
     invoice_positions = models.ManyToManyField(Wine, through = "InvoicePosition", verbose_name = "Rechnungsposten")
+    ust = settings.UST
 
-    def _get_total(self):
+    def _get_sum(self):
         total = 0
         for pos in self.invoiceposition_set.all():
             total += pos.sum
-        return total * (100 - self.rebate) / 100
+        return total
+    sum = property(_get_sum)
+    
+    def _get_rebate_amount(self):
+        return self.sum * self.rebate / 100
+    rebate_amount = property(_get_rebate_amount)
+    
+    def _get_ust_amount(self):
+        return round(self.sum / (100 + self.ust) * self.ust, 2)
+    ust_amount = property(_get_ust_amount)
+    
+    def _get_total(self):
+        return self.sum * (100 - self.rebate) / 100
     total = property(_get_total)
 
     class Meta:

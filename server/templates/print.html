@@ -3,64 +3,119 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Druckansicht Rechnung {{ invoice.id }}</title>
-		
-		<!--<link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
 		<link rel="stylesheet" href="/static/css/print.css">
 	</head>
+	
 	<body>
-		<header>
-			<img src="" alt="">
-			<h1>Weingut Haider</h1>
-		</header>
-		<div class="container">
-			<address><p>
-				Weingut Haider<br>
-				Seegasse 16<br>
-				7142 Illmitz<br>
-				Österreich
-			</p><address>
-			<strong>Rechnungs-Nr.:</strong> {{ invoice.id }}<br>
-			<strong>Rechnungsdatum:</strong> {{ invoice.date }}
-			<p><pre>{{ invoice.customer }}</pre></p>
-			<hr>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Pos</th>
-						<th>Bezeichnung</th>
-						<th class="right">Preis</th>
-						<th class="right">Anzahl</th>
-						<th class="right">Summe</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for item in invoice.invoiceposition_set.all %}
-					<tr>
-						<td>{{ forloop.counter }}</td>
-						<td>{{ item.wine.description }}</td>
-						<td class="right">€ {{ item.wine.price }}</td>
-						<td class="right">{{ item.quantity }}</td>
-						<td class="right">€ {{ item.sum }}</td>
-					</tr>
-					{% endfor %}
-					<tr></tr>
-					{% if invoice.rebate > 0 %}
-					<tr>
-						<td class="right" colspan="3">Rabbat</td>
-						<td class="right">{{ invoice.rebate }} %</td>
-						<td class="right">€</td>
-					</tr>
-					{% endif %}
-					<tr>
-						<td class="right" colspan="4">MWST 20%</td>
-						<td class="right">€</td>
-					</tr>
-					<tr>
-						<td class="right" colspan="4">Gesamt</td>
-						<td class="right">€ {{ invoice.total }}</td>
-					</tr>
-				</tbody>
+		<div id="header" style="line-height: normal;">
+			<table width="98%">
+				<tr>
+					<td>
+						Rechnung Nr.: {{ invoice.id }}
+					</td>
+					<td align="center">
+						Seite <pdf:pagenumber />
+						von <pdf:pagecount />
+					</td>
+					<td align="right">
+						{{ invoice.date }}
+					</td>
+				</tr>
 			</table>
+				
+			<hr>
+		</div>
+		
+		<header>
+			<table>
+				<tr>
+					<td width="30%">
+						<img src="/static/img/logo-print.jpg" alt="" style="margin-right: 20pt;">
+					</td>
+					<td>
+						<h1>Weingut Haider</h1>
+						<p>
+							weinguthaider.at<br>
+							office@weinguthaider.at<br>
+							Tel.: +43 2175 2358<br>
+							Fax: +43 2175 2358-4<br>
+							UID: ATU 63394044<br>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</header>
+		
+		<table width="98%">
+			<tr>
+				<td>
+					<pre id="receiver">{{ invoice.customer }}</pre>
+				</td>
+				<td class="right">
+					Weingut Haider&nbsp;<br>
+					Seegasse 16<br>
+					7142 Illmitz&nbsp;<br>
+					Österreich<br>
+				</td>
+			</tr>
+		</table>
+		
+		<br>
+		<p id="invoice-data"></p><strong>Rechnung Nr.:</strong> {{ invoice.id }}<br>
+		<strong>Datum:</strong> {{ invoice.date }}</p>
+		<hr>
+			
+		<table id="item-table" repeat="1" width="99%">
+			<thead>
+				<tr>
+					<th width="30%">Bezeichnung</th>
+					<th align="right" width="20%">Gebinde</th>
+					<th align="right" width="25%">Preis inkl. Steuern</th>
+					<th align="right" width="15%">Menge</th>
+					<th align="right" width="15%">Betrag</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in invoice.invoiceposition_set.all %}
+				<tr>
+					<td>{{ item.wine.description }}</td>
+					<td align="right">{{ item.wine.volume_in_l }} l</td>
+					<td align="right">€ {{ item.wine.price }}</td>
+					<td align="right">{{ item.quantity }}</td>
+					<td align="right">€ {{ item.sum }}</td>
+				</tr>
+				{% endfor %}
+				<tr></tr>
+				<tr>
+					<td align="right" colspan="4">Zwischensumme &nbsp;</td>
+					<td align="right">€ {{ invoice.sum }}</td>
+				</tr>
+				{% if invoice.rebate > 0 %}
+				<tr>
+					<td align="right" colspan="4">Rabbat {{ invoice.rebate }} %&nbsp;</td>
+					<td align="right">€ {{ invoice.rebate_amount }}</td>
+				</tr>
+				{% endif %}
+				<tr>
+					<td align="right" colspan="4">USt {{ invoice.ust }} %</td>
+					<td align="right">€ {{ invoice.ust_amount }}</td>
+				</tr>
+				<tr>
+					<td align="right" colspan="4">Gesamt</td>
+					<td align="right">€ {{ invoice.total }}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div id="footer">
+			<hr>
+			<p>
+				Zahlungsziel: nach Erhalt der Rechnung ohne Abzüge.<br>
+				Durchschnittssteuersatz gemäß § 22 Abs. 1 UstG<br>
+				Die Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.<br>
+				Bankverbindung: Sparkasse Illmitz, BLZ 20216, Kto.-Nr.:23011656501<br>
+				IBAN: AT762021623011656501, BIC/SWIFT: SPHBAT21<br>
+			</p>
 		</div>
 	</body>
 </html>

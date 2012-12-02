@@ -46,6 +46,10 @@ class Invoice(models.Model):
     rebate = models.PositiveIntegerField("Rabatt (%)")
     invoice_positions = models.ManyToManyField(Wine, through = "InvoicePosition", verbose_name = "Rechnungsposten")
     ust = settings.UST
+    
+    def _get_pretty_id(self):
+        return unicode(settings.INVOICE_ID_PREFIX) + unicode(self.pk)
+    pretty_id = property(_get_pretty_id)
 
     def _get_sum(self):
         total = 0

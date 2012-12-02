@@ -2,7 +2,7 @@
 <html lang="de">
 	<head>
 		<meta charset="utf-8">
-		<title>Druckansicht Rechnung {{ invoice.id }}</title>
+		<title>Druckansicht Rechnung {{ invoice.pretty_id }}</title>
 		<link rel="stylesheet" href="/static/css/print.css">
 	</head>
 	
@@ -11,7 +11,7 @@
 			<table width="98%">
 				<tr>
 					<td>
-						Rechnung Nr.: {{ invoice.id }}
+						Rechnung Nr.: {{ invoice.pretty_id }}
 					</td>
 					<td align="center">
 						Seite <pdf:pagenumber />
@@ -30,7 +30,7 @@
 			<table>
 				<tr>
 					<td width="30%">
-						<img src="/static/img/logo-print.jpg" alt="" style="margin-right: 20pt;">
+						<img src="/static/img/logo-print.jpg" alt="">
 					</td>
 					<td>
 						<h1>Weingut Haider</h1>
@@ -45,13 +45,13 @@
 				</tr>
 			</table>
 		</header>
-		
+		<br>
 		<table width="98%">
 			<tr>
 				<td>
 					<pre id="receiver">{{ invoice.customer }}</pre>
 				</td>
-				<td class="right">
+				<td align="right">
 					Weingut Haider&nbsp;<br>
 					Seegasse 16<br>
 					7142 Illmitz&nbsp;<br>
@@ -60,9 +60,10 @@
 			</tr>
 		</table>
 		
-		<br>
-		<p id="invoice-data"></p><strong>Rechnung Nr.:</strong> {{ invoice.id }}<br>
-		<strong>Datum:</strong> {{ invoice.date }}</p>
+		<p id="invoice-data">
+			<strong>Rechnung Nr.:</strong> {{ invoice.pretty_id }}<br>
+			<strong>Datum:</strong> {{ invoice.date }}
+		</p>
 		<hr>
 			
 		<table id="item-table" repeat="1" width="99%">

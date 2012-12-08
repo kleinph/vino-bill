@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:ng="http://angularjs.org" lang="de" ng-app="invoiceApp">
+<html lang="de" ng-app="invoiceApp">
 	<head>
 		<meta charset="utf-8">
 		<title>Weingut Haider | Rechnung erstellen</title>
@@ -72,10 +72,10 @@
 									<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
 										<strong>{{wine.description}}</strong><br>
 										{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
-										<span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
-											<button class="btn" ng-click="decrease()"><i class="icon-minus">-</i></button><!--
-											--><input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()"><!--
-											--><button class="btn" ng-click="increase()"><i class="icon-plus">+</i></button>
+										<span class="input-append pull-right" style="position: relative; bottom: 15px;">
+											<input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()"><!--
+											--><button class="btn" ng-click="decrease()"><i class="icon-minus"></i></button><!--
+											--><button class="btn" ng-click="increase()"><i class="icon-plus"></i></button>
 										</span>
 									</li>
 								</ul>
@@ -120,8 +120,40 @@
 
 					<hr>
 
-					<form class="well form-horizontal">
+					<form class="well form hidden-desktop">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="customer-data">Kundendaten</label>
+								<div class="controls">
+									<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="customerData">
+									</textarea>
+								</div>
+							</div>
+						</fieldset>
 
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="rebate">Rabatt</label>
+								<div class="controls">
+									<div class="input-append">
+										<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate"><!--
+										--><span class="add-on">%</span>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<fieldset>
+							<div class="control-group">
+								<div class="controls">
+									<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+									<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+					
+					<form class="well form-horizontal visible-desktop">
 						<fieldset>
 							<div class="control-group">
 								<label class="control-label" for="customer-data">Kundendaten</label>

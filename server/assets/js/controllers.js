@@ -1,5 +1,3 @@
-var invoiceApp = angular.module("invoiceApp", ["invoiceServices"]);
-
 invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $rootScope, Category) {
 	/*
 	 * app wide reset function

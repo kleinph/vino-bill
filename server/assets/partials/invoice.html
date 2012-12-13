@@ -1,0 +1,142 @@
+<!-- notification area -->
+<div class="row">
+	<div class="span6 offset3">
+
+		<div id="alert-error" class="alert alert-block alert-error fade in hide">
+			<h4 class="alert-heading">Fehler!</h4>
+			<p>Daten konnten nicht übermittelt werden.</p>
+			<p>
+				<button type="button" class="btn btn-danger" ng-click="reset()" onclick="dismissAlert('alert-error')">
+					Zurücksetzen
+				</button>
+				<button type="button" class="btn btn-success" ng-click="submit()" onclick="dismissAlert('alert-error')">
+					Erneut versuchen
+				</button>
+			</p>
+		</div>
+
+		<div id="alert-success" class="alert alert-block alert-success fade in hide">
+			<button type="button" class="close" onclick="dismissAlert('alert-success')">&times;</button>
+			Alle Daten wurden erfolgreich übermittelt. Ausdruck wurde gestartet.
+		</div>
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="span6">
+		<div class="page-header">
+			<h2>Weine</h2>
+		</div>
+		<ul class="accordion unstyled" id="wine-list" ng-controller="CategoryListCtrl">
+			<li class="accordion-group" ng-repeat="category in categories">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" data-target="#collapse-{{category.id}}">
+						{{category.name}}
+					</a>
+				</div>
+				<div class="accordion-body collapse" id="collapse-{{category.id}}" style="height: 0px;">
+					<ul class="accordion-inner">
+						<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
+							<strong>{{wine.description}}</strong><br>
+							{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
+							<span class="input-append pull-right" style="position: relative; bottom: 15px;">
+								<input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()">
+								<button class="btn" ng-click="increase()"><i class="icon-plus"></i></button>
+								<button class="btn" ng-click="decrease()"><i class="icon-minus"></i></button>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="span6" ng-controller="InvoiceCtrl">
+		<div class="page-header">
+			<h2>Übersicht</h2>
+		</div>
+		<table id="wine-table" class="table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Bezeichnung</th>
+					<th class="right">Preis</th>
+					<th class="right">Anzahl</th>
+					<th class="right">Summe</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in items">
+					<td>{{$index + 1}}</td>
+					<td>{{item.wine.description}}</td>
+					<td class="right">{{item.wine.price | currency: "€ "}}</td>
+					<td class="right">{{item.quantity}}</td>
+					<td class="right">{{item.sum() | currency: "€ "}}</td>
+				</tr>
+					<tr class="well" ng-show="rebateInEuro()">
+					<td class="right" colSpan="3">Rabbat</td>
+					<td class="right">{{invoice.rebate}} %</td>
+					<td class="right">{{rebateInEuro() | currency: "€ "}}</td>
+				</tr>
+				<tr class="well">
+					<td colSpan="4" class="right"><strong>Gesamt</strong></td>
+					<td class="right"><strong>{{total() | currency: "€ "}}</strong></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<hr>
+
+		<form class="form hidden-desktop">
+			<div class="control-group">
+				<label class="control-label" for="customer-data">Kundendaten</label>
+				<div class="controls">
+					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
+					</textarea>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="rebate">Rabatt</label>
+				<div class="controls">
+					<div class="input-append">
+						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
+						<span class="add-on">%</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+			</div>
+		</form>
+
+		<form class="form-horizontal visible-desktop">
+			<div class="control-group">
+				<label class="control-label" for="customer-data">Kundendaten</label>
+				<div class="controls">
+					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
+					</textarea>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="rebate">Rabatt</label>
+				<div class="controls">
+					<div class="input-append">
+						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
+						<span class="add-on">%</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+			</div>
+		</form>
+
+	</div>
+</div> <!-- .row-fluid -->

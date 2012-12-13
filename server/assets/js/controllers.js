@@ -18,6 +18,7 @@ invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $roo
 invoiceApp.controller("WineCtrl", function WineCtrl($scope, $rootScope) {
 	$scope.quantity = 0;
 	
+	// reset listener
 	$scope.$on("reset", function() { $scope.quantity = 0; });
 		
 	$scope.increase = function() {
@@ -35,7 +36,7 @@ invoiceApp.controller("WineCtrl", function WineCtrl($scope, $rootScope) {
 	};
 });
 
-invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
+invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, PrintService) {
 	/*
 	 * lookup table for the indices of the invoice items
 	 * a little bit ugly, but the best solution as far as I know
@@ -73,39 +74,46 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 	var reset = function() {
 		itemsLookup = {};
 		$scope.items = [];
-		$scope.rebate = 0;
-		$scope.customerData = "";
+		$scope.invoice = {
+			rebate: 0,
+			customer: "",
+			items: []
+		};
 		$scope.isSubmitting = false;
-		
-		// TODO try to collapse the open accordion
-		// $(".collapse").collapse("hide");
+		// collapse an open accordion
+		$(".in.collapse").collapse("toggle");
 	};
 	reset();
 	
+	// event listener
 	$scope.$on("reset", reset);
 	$scope.$on("update-item", function(event, data) {
 		updateItem(data.wine, data.quantity);
 	});
 	
+	var print = function(id) {
+		PrintService.print({id: id}, {}, function(data, headers) {
+			$scope.reset();
+			$(".alert-success").fadeIn();
+		}, function(data, headers) {
+			$scope.isSubmitting = false;
+		});
+	};
+	
 	$scope.submit = function() {
-		var items = [];
+		$scope.invoice.date = new Date();
 		$scope.isSubmitting = true;
 		
 		for (var i in $scope.items) {
-			items.push({
+			$scope.invoice.items.push({
 				quantity: $scope.items[i].quantity,
 				wine: $scope.items[i].wine.resource_uri
 			});
 		}
 		
-		Invoice.create({}, {
-			date: new Date(),
-			customer: $scope.customerData,
-			rebate: $scope.rebate,
-			items: items
-		}, function(data, headers) {
-			$scope.reset();
-			$(".alert-success").fadeIn();
+		Invoice.create({}, $scope.invoice, function(data, headers) {
+			id = headers("Location").split("/").pop();
+			print(id);
 		}, function(data, headers) {
 			// TODO error handling
 			$scope.isSubmitting = false;
@@ -123,7 +131,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice) {
 	};
 	
 	$scope.rebateInEuro = function() {
-		return $scope.sum() * ($scope.rebate / 100);
+		return $scope.sum() * ($scope.invoice.rebate / 100);
 	};
 	
 	$scope.total = function() {

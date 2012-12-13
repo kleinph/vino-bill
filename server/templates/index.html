@@ -110,7 +110,7 @@
 							</tr>
 							<tr class="well" ng-show="rebateInEuro()">
 								<td class="right" colSpan="3">Rabbat</td>
-								<td class="right">{{rebate}} %</td>
+								<td class="right">{{invoice.rebate}} %</td>
 								<td class="right">{{rebateInEuro() | currency: "€ "}}</td>
 							</tr>
 							<tr class="well">
@@ -126,7 +126,7 @@
 						<div class="control-group">
 							<label class="control-label" for="customer-data">Kundendaten</label>
 							<div class="controls">
-								<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="customerData">
+								<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
 								</textarea>
 							</div>
 						</div>
@@ -135,7 +135,7 @@
 							<label class="control-label" for="rebate">Rabatt</label>
 							<div class="controls">
 								<div class="input-append">
-									<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate">
+									<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
 									<span class="add-on">%</span>
 								</div>
 							</div>
@@ -151,7 +151,7 @@
 						<div class="control-group">
 							<label class="control-label" for="customer-data">Kundendaten</label>
 							<div class="controls">
-								<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="customerData">
+								<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
 								</textarea>
 							</div>
 						</div>
@@ -160,7 +160,7 @@
 							<label class="control-label" for="rebate">Rabatt</label>
 							<div class="controls">
 								<div class="input-append">
-									<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="rebate">
+									<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
 									<span class="add-on">%</span>
 								</div>
 							</div>

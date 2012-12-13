@@ -1,28 +1,3 @@
-<!-- notification area -->
-<div class="row">
-	<div class="span6 offset3">
-
-		<div id="alert-error" class="alert alert-block alert-error fade in hide">
-			<h4 class="alert-heading">Fehler!</h4>
-			<p>Daten konnten nicht übermittelt werden.</p>
-			<p>
-				<button type="button" class="btn btn-danger" ng-click="reset()" onclick="dismissAlert('alert-error')">
-					Zurücksetzen
-				</button>
-				<button type="button" class="btn btn-success" ng-click="submit()" onclick="dismissAlert('alert-error')">
-					Erneut versuchen
-				</button>
-			</p>
-		</div>
-
-		<div id="alert-success" class="alert alert-block alert-success fade in hide">
-			<button type="button" class="close" onclick="dismissAlert('alert-success')">&times;</button>
-			Alle Daten wurden erfolgreich übermittelt. Ausdruck wurde gestartet.
-		</div>
-
-	</div>
-</div>
-
 <div class="row">
 	<div class="span6">
 		<div class="page-header">
@@ -35,7 +10,7 @@
 						{{category.name}}
 					</a>
 				</div>
-				<div class="accordion-body collapse" id="collapse-{{category.id}}" style="height: 0px;">
+				<div class="accordion-body collapse" id="collapse-{{category.id}}">
 					<ul class="accordion-inner">
 						<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
 							<strong>{{wine.description}}</strong><br>

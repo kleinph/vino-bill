@@ -1,8 +1,7 @@
 invoiceApp.controller("CategoryListCtrl", function CategoryListCtrl($scope, $rootScope, Category) {
-	/*
-	 * app wide reset function
-	 */
 	$rootScope.reset = function() {
+		// collapse an open accordion
+		$(".in.collapse").collapse("toggle");
 		$rootScope.$broadcast("reset");
 	};
 	
@@ -57,7 +56,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Print
 		var idx = itemsLookup[wine.id];
 		
 		if (quantity === 0) {
-			delete $scope.items.splice(idx, 1);
+			$scope.items.splice(idx, 1);
 			delete itemsLookup[wine.id];
 		} else {
 			if (isNaN(idx)) {
@@ -78,8 +77,6 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Print
 			items: []
 		};
 		$scope.isSubmitting = false;
-		// collapse an open accordion
-		$(".in.collapse").collapse("toggle");
 	};
 	reset();
 	
@@ -92,9 +89,21 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Print
 	var print = function(id) {
 		PrintService.print({id: id}, {}, function(data, headers) {
 			$scope.reset();
-			$(".alert-success").fadeIn();
+			$scope.$emit("alert", {
+				type: "alert-success",
+				text: "Alle Daten wurden übertragen"
+			});
 		}, function(data, headers) {
 			$scope.isSubmitting = false;
+			// TODO test error handling
+			$scope.$emit("alert", {
+				type: "alert-error",
+				modal: true,
+				heading: "Es ist ein Fehler aufgetreten!",
+				text: "Daten konnten nicht gedrukt werden. Wollen Sie es erneut versuchen?",
+				positiveAction: function() { print(id); },
+				negativeAction: $scope.reset(),
+			})
 		});
 	};
 	
@@ -113,9 +122,15 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Print
 			id = headers("Location").split("/").pop();
 			print(id);
 		}, function(data, headers) {
-			// TODO error handling
 			$scope.isSubmitting = false;
-			$(".alert-error").fadeIn();
+			$scope.$emit("alert", {
+				type: "alert-error",
+				modal: true,
+				heading: "Es ist ein Fehler aufgetreten!",
+				text: "Daten konnten nicht übermittelt werden. Wollen Sie es erneut versuchen?",
+				positiveAction: $scope.submit,
+				negativeAction: $scope.reset,
+			});
 		});
 	};
 	
@@ -135,4 +150,42 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, Invoice, Print
 	$scope.total = function() {
 		return $scope.sum() - $scope.rebateInEuro();
 	};
+});
+
+invoiceApp.controller("AlertCtrl", function AlertCtrl($scope, $rootScope, $timeout) {
+	$scope.alerts = [];
+	
+	var onNewAlert = function(event, data) {
+		var id = $scope.alerts.length;
+		
+		$scope.alerts.push(data);
+		
+		// show alert (with fancy animation)
+		$timeout(function() {
+			$("#alert-" + id).fadeIn();
+		});
+		// start timer on non modal dialogs
+		if (!data.modal) {
+			var timeout = isNaN(data.timeout) ? 60 : data.timeout;
+			$timeout(function() { $scope.onClose(id); }, timeout * 1000);
+		}
+	};
+	
+	$scope.onPositiveAction = function(id) {
+		$scope.alerts[id].positiveAction();
+		$scope.onClose();
+	};
+	
+	$scope.onNegativeAction = function(id) {
+		$scope.alerts[id].negativeAction();
+		$scope.onClose(id);
+	};
+	
+	$scope.onClose = function(id) {
+		$("#alert-" + id).fadeOut();
+		$scope.alerts.splice(id, 1);
+	};
+	
+	// event listener
+	$rootScope.$on("alert", onNewAlert);
 });

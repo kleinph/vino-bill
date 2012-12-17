@@ -24,7 +24,7 @@ factory("Category", function($resource) {
 		save: {method: "PUT"}}
 	);
 }).factory("PrintService", function($resource) {
-	return $resource("pdf/:id", {id: "@id"},
+	return $resource("print/:id", {id: "@id"},
 		{print: {method: "GET"}}
 	);
 });

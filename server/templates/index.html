@@ -31,15 +31,15 @@
 			<div class="row" ng-controller="AlertCtrl">
 				<div class="span6 offset3">
 
-					<div ng-repeat="alert in alerts" id="alert-{{$index}}" class="alert alert-block fade in hide {{alert.type}}">
+					<div ng-repeat="alert in alerts" id="{{alert.id}}" class="alert alert-block fade in hide {{alert.type}}">
 						<button type="button" class="close" ng-show="!alert.modal" ng-click="onClose($index)">&times;</button>
 						<h4 class="alert-heading" ng-show="alert.heading">{{alert.heading}}</h4>
 						<p>{{alert.text}}</p>
 						<p ng-show="alert.modal">
-							<button type="button" class="btn btn-success" ng-click="onPositiveAction($index)">
+							<button type="button" class="btn btn-success" ng-click="onPositiveAction(alert.id)">
 								Erneut versuchen
 							</button>
-							<button type="button" class="btn" ng-click="onNegativeAction($index)">
+							<button type="button" class="btn" ng-click="onNegativeAction(alert.id)">
 								Zurücksetzen
 							</button>
 						</p>
@@ -63,8 +63,9 @@
 		<script src="static/lib/angular/angular-resource.js"></script>
 		<script src="static/lib/angular/i18n/angular-locale_de-at.js"></script>
 		<script src="static/js/app.js"></script>
-		<script src="static/js/controllers.js"></script>
-		<script src="static/js/services.js"></script>
-		<script src="static/js/utils.js"></script>
+		<script src="static/js/controller/AlertCtrl.js"></script>
+		<script src="static/js/controller/InvoiceCtrl.js"></script>
+		<script src="static/js/services/RestServices.js"></script>
+		<script src="static/js/services/InvoiceService.js"></script>
 	</body>
 </html>

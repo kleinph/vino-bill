@@ -3,8 +3,8 @@
 		<div class="page-header">
 			<h2>Weine</h2>
 		</div>
-		<ul class="accordion unstyled" id="wine-list" ng-controller="CategoryListCtrl">
-			<li class="accordion-group" ng-repeat="category in categories">
+		<ul class="accordion unstyled" id="wine-list">
+			<li class="accordion-group" ng-repeat="category in invoice.categories">
 				<div class="accordion-heading">
 					<a class="accordion-toggle" data-toggle="collapse" data-parent="#wine-list" data-target="#collapse-{{category.id}}">
 						{{category.name}}
@@ -16,9 +16,9 @@
 							<strong>{{wine.description}}</strong><br>
 							{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
 							<span class="input-append pull-right" style="position: relative; bottom: 15px;">
-								<input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItems()">
-								<button class="btn" ng-click="increase()"><i class="icon-plus"></i></button>
-								<button class="btn" ng-click="decrease()"><i class="icon-minus"></i></button>
+								<input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItem(quantity)">
+								<button class="btn" ng-click="updateItem(quantity+1)"><i class="icon-plus"></i></button>
+								<button class="btn" ng-click="updateItem(quantity-1)"><i class="icon-minus"></i></button>
 							</span>
 						</li>
 					</ul>
@@ -27,7 +27,7 @@
 		</ul>
 	</div>
 
-	<div class="span6" ng-controller="InvoiceCtrl">
+	<div class="span6">
 		<div class="page-header">
 			<h2>Übersicht</h2>
 		</div>
@@ -42,21 +42,21 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="item in items">
+				<tr ng-repeat="item in invoice.items">
 					<td>{{$index + 1}}</td>
 					<td>{{item.wine.description}}</td>
 					<td class="right">{{item.wine.price | currency: "€ "}}</td>
 					<td class="right">{{item.quantity}}</td>
 					<td class="right">{{item.sum() | currency: "€ "}}</td>
 				</tr>
-					<tr class="well" ng-show="rebateInEuro()">
+					<tr class="well" ng-show="invoice.rebateInEuro()">
 					<td class="right" colSpan="3">Rabbat</td>
 					<td class="right">{{invoice.rebate}} %</td>
-					<td class="right">{{rebateInEuro() | currency: "€ "}}</td>
+					<td class="right">{{invoice.rebateInEuro() | currency: "€ "}}</td>
 				</tr>
 				<tr class="well">
 					<td colSpan="4" class="right"><strong>Gesamt</strong></td>
-					<td class="right"><strong>{{total() | currency: "€ "}}</strong></td>
+					<td class="right"><strong>{{invoice.total() | currency: "€ "}}</strong></td>
 				</tr>
 			</tbody>
 		</table>
@@ -83,8 +83,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
-				<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>
 
@@ -108,8 +108,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
-				<button class="btn" ng-disabled="!items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>
 

@@ -17,7 +17,7 @@ def fetch_resources(uri, rel):
     return join(settings.STATICFILES_DIRS[0], uri.replace(settings.STATIC_URL, ""))
 
 def index(request):
-    return HttpResponse(open("templates/index.html").read())
+    return HttpResponse(open("assets/index.html").read())
 
 def pdf(request, invoice_id):
     invoice = Invoice.objects.get(id = invoice_id)

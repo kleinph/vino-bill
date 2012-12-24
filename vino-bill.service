@@ -4,6 +4,7 @@ Description=Vine billing system for Weingut Haider
 [Service]
 Type=simple
 ExecStart=/usr/share/vino-bill/server/manage.py runserver 0:80 --insecure
+WorkingDirectory=/usr/share/vino-bill/server/
 
 [Install]
 WantedBy=network.target

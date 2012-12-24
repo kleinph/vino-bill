@@ -85,15 +85,15 @@ STATICFILES_FINDERS = (
 )
 
 # Absolute path to directory where invoices should be stored
-INVOICE_DIR = '/usr/share/vinoBill/invoices/'
+INVOICE_DIR = '/var/lib/vino-bill/invoices/'
 
 # Prefix for invoice files.
 # Invoice filename will be: prefix+invoice-id+.pdf
 # e.g.: invoice-10.pdf (with prefix = 'invoice-')
-INVOICE_PREFIX = ''
+INVOICE_PREFIX = 'Rechnung-'
 
 # Prefix for the invoice ID
-# e.g.: AB42
+# e.g.: AH42
 INVOICE_ID_PREFIX = 'AH'
 
 # Value of the local sales tax (Umsatzsteuer) in percent

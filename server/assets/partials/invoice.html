@@ -63,11 +63,12 @@
 
 		<hr>
 
+		<!-- form for smaller screens (tablets, smartphones) -->
 		<form class="form hidden-desktop">
 			<div class="control-group">
 				<label class="control-label" for="customer-data">Kundendaten</label>
 				<div class="controls">
-					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
+					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer" ng-disabled="isSubmitting">
 					</textarea>
 				</div>
 			</div>
@@ -76,7 +77,7 @@
 				<label class="control-label" for="rebate">Rabatt</label>
 				<div class="controls">
 					<div class="input-append">
-						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
+						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate" ng-disabled="isSubmitting">
 						<span class="add-on">%</span>
 					</div>
 				</div>
@@ -88,11 +89,12 @@
 			</div>
 		</form>
 
+		<!-- form for larger screens (desktops) -->
 		<form class="form-horizontal visible-desktop">
 			<div class="control-group">
 				<label class="control-label" for="customer-data">Kundendaten</label>
 				<div class="controls">
-					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer">
+					<textarea id="customer-data" name="customer-data" class="input-xlarge" rows="4" ng-model="invoice.customer" ng-disabled="isSubmitting">
 					</textarea>
 				</div>
 			</div>
@@ -101,7 +103,7 @@
 				<label class="control-label" for="rebate">Rabatt</label>
 				<div class="controls">
 					<div class="input-append">
-						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate">
+						<input type="number" id="rebate" name="rebate" class="input-mini right" ng-model="invoice.rebate" ng-disabled="isSubmitting">
 						<span class="add-on">%</span>
 					</div>
 				</div>

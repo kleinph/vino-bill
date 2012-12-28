@@ -17,7 +17,7 @@ install=vino-bill.install
 md5sums=()
 
 _gitroot=git://github.com/kleinph/"$pkgname".git
-_gitbranch=master #release
+_gitbranch=release
 
 build() {
   cd "$srcdir"

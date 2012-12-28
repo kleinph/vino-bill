@@ -1,0 +1,19 @@
+## arg 1:  the new package version
+post_install() {
+  echo "Installing django plugins 'django-tastypie' and 'xhtml2pdf' as dependencies."
+  echo "Feel free to remove them after uninstalling vino-bill"
+  pip2 install django-tastypie xhtml2pdf
+  
+  if [[ ! -f /var/lib/vino-bill/database.db ]]; then
+    echo "Superuser is pre configured"
+    echo "Login in with 'admin' and 'password' and set password and e-mail address."
+  fi
+}
+
+## arg 1:  the old package version
+pre_remove() {
+  # remove precompiled python files
+  rm -f $(find "usr/share/vino-bill/" -type f -name "*.pyc")
+}
+
+# vim:set ts=2 sw=2 et:

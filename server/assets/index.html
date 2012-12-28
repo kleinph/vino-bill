@@ -36,9 +36,9 @@
 					<div ng-repeat="alert in alerts" id="{{alert.id}}" class="alert alert-block fade in hide {{alert.type}}">
 						<button type="button" class="close" ng-show="!alert.modal" ng-click="onClose($index)">&times;</button>
 						<h4 class="alert-heading" ng-show="alert.heading">{{alert.heading}}</h4>
-						<p>{{alert.text}}</p>
+						<p ng-bind-html-unsafe="alert.text"></p>
 						<p ng-show="alert.modal">
-							<button type="button" class="btn btn-success" ng-click="onPositiveAction(alert.id)">
+							<button type="button" class="btn btn-primary" ng-click="onPositiveAction(alert.id)">
 								Erneut versuchen
 							</button>
 							<button type="button" class="btn" ng-click="onNegativeAction(alert.id)">

@@ -36,13 +36,15 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 	
 	$scope.submit = function() {
 		$scope.isSubmitting = true;
+		$(".in.collapse").collapse("toggle");
+		$("html, body").animate({ scrollTop: 0 }, "slow");
 		
 		InvoiceService.submit(function(data, headers) {
 			$scope.$emit("alert", {
 				type: "alert-success",
-				// TODO highlight invoice id
-				text: "Die Rechnung " + $scope.invoice.id + " wurde erfolgreich erstellt! " +
-				"Ausdruck wurde gestartet.",
+				// FIXME do not harcode the id prefix (AH)
+				text: "Daten wurden erfolgreich gespeichert!<br>Rechnung <strong>AH" + $scope.invoice.id +
+				"</strong> wird generiert.",
 				timeout: 30,
 			});
 			print();
@@ -64,5 +66,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 		$scope.$broadcast("reset");
 		// collapse open accordeons
 		$(".in.collapse").collapse("toggle");
+		// scroll to top
+		$("html, body").animate({ scrollTop: 0 }, "slow");
 	}
 });

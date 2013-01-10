@@ -2,7 +2,7 @@
 
 pkgname=vino-bill
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A web based invoice management tool for winemakers"
 arch=('any')
 url="https://github.com/kleinph/vino-bill"

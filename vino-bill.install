@@ -1,10 +1,11 @@
 ## arg 1:  the new package version
-post_install() {
+pre_install() {
   echo "Installing django plugins 'django-tastypie' and 'xhtml2pdf' as dependencies."
   echo "Feel free to remove them after uninstalling vino-bill"
   pip2 install django-tastypie xhtml2pdf
   
   if [[ ! -f /var/lib/vino-bill/database.db ]]; then
+    echo ""
     echo "Superuser is pre configured"
     echo "Login in with 'admin' and 'password' and set password and e-mail address."
   fi

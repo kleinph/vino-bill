@@ -101,7 +101,7 @@ INVOICE_PREFIX = 'Rechnung-'
 INVOICE_ID_PREFIX = 'AH'
 
 # Value of the local sales tax (Umsatzsteuer) in percent
-UST = 16
+UST = 12
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '^=cmtfchxmjn+d#^bx2f*x+(pmr7!2rpoccz=4lrs#p7pk#ev='

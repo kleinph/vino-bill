@@ -28,6 +28,7 @@ invoiceApp.service("InvoiceService", function(Category, Invoice, PrintService) {
 		idx = itemsLookup[wine.id];
 		
 		if (quantity === 0) {
+			if (isNaN(idx)) return;
 			self.items.splice(idx, 1);
 			delete itemsLookup[wine.id];
 		} else {

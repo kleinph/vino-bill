@@ -27,7 +27,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 				type: "alert-error",
 				modal: true,
 				heading: "Es ist ein Fehler aufgetreten!",
-				text: "Daten konnten nicht gedrukt werden. Wollen Sie es erneut versuchen?",
+				text: "Kundenbeleg konnte nicht gedrukt werden. Wollen Sie es erneut versuchen?",
 				positiveAction: print,
 				negativeAction: $scope.reset,
 			})
@@ -42,9 +42,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 		InvoiceService.submit(function(data, headers) {
 			$scope.$emit("alert", {
 				type: "alert-success",
-				// FIXME do not harcode the id prefix (AH)
-				text: "Daten wurden erfolgreich gespeichert!<br>Rechnung <strong>AH" + $scope.invoice.id +
-				"</strong> wird generiert.",
+				text: "Daten wurden erfolgreich gespeichert!<br>Kundenbeleg wird generiert.",
 				timeout: 30,
 			});
 			print();

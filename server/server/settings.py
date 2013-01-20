@@ -94,7 +94,7 @@ INVOICE_DIR = '/var/lib/vino-bill/invoices/'
 # Prefix for invoice files.
 # Invoice filename will be: prefix+invoice-id+.pdf
 # e.g.: invoice-10.pdf (with prefix = 'invoice-')
-INVOICE_PREFIX = 'Rechnung-'
+INVOICE_PREFIX = 'Kundenbeleg-'
 
 # Prefix for the invoice ID
 # e.g.: AH42

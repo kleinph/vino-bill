@@ -11,7 +11,8 @@
 			<table>
 				<tr>
 					<td>
-						Rechnung Nr.: {{ invoice.pretty_id }}
+						<!-- Rechnung Nr.: {{ invoice.pretty_id }} -->
+						Kundenbeleg
 					</td>
 					<td align="center">
 						Seite <pdf:pagenumber />
@@ -61,7 +62,7 @@
 		</table>
 		
 		<p id="invoice-data">
-			<strong>Rechnung Nr.:</strong> {{ invoice.pretty_id }}<br>
+			<!-- <strong>Rechnung Nr.:</strong> {{ invoice.pretty_id }}<br> -->
 			<strong>Datum:</strong> {{ invoice.date }}
 		</p>
 		<hr>

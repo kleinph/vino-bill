@@ -1,7 +1,7 @@
 # Maintainer: Philipp Klein <philipptheklein@gmail.com>
 
 pkgname=vino-bill
-pkgver=1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc="A web based invoice management tool for winemakers"
 arch=('any')

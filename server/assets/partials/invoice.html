@@ -15,10 +15,10 @@
 						<li ng-repeat="w in category.wines | orderBy: 'description'" ng-controller="WineCtrl" ng-init="wine = w">
 							<strong>{{wine.description}}</strong><br>
 							{{wine.volume / 1000 | number}} l – {{wine.price | currency:'€ '}}
-							<span class="input-append pull-right" style="position: relative; bottom: 15px;">
+							<span class="input-prepend input-append pull-right" style="position: relative; bottom: 15px;">
+								<button class="btn" ng-click="updateItem(quantity-1)"><i class="icon-minus"></i></button>
 								<input class="input-micro right" type="number" ng-model="quantity" ng-change="updateItem(quantity)">
 								<button class="btn" ng-click="updateItem(quantity+1)"><i class="icon-plus"></i></button>
-								<button class="btn" ng-click="updateItem(quantity-1)"><i class="icon-minus"></i></button>
 							</span>
 						</li>
 					</ul>
@@ -84,7 +84,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(true)">Drucken</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(false)">Erstellen</button></li>
 				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>
@@ -110,7 +111,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(true)">Drucken</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(false)">Erstellen</button></li>
 				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>

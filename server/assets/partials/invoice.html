@@ -84,7 +84,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(true)">Drucken</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(false)">Erstellen</button></li>
 				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>
@@ -110,7 +111,8 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit()">Rechnung erstellen</button>
+				<button class="btn btn-success" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(true)">Drucken</button>
+				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="submit(false)">Erstellen</button></li>
 				<button class="btn" ng-disabled="!invoice.items.length || isSubmitting" ng-click="reset()">Zurücksetzen</button>
 			</div>
 		</form>

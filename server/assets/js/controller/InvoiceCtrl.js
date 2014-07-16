@@ -22,7 +22,6 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 				text: "Auftrag wurde an Drucker gesendet."
 			});
 		}, function(data, headers) {
-			// TODO test error handling
 			$scope.$emit("alert", {
 				type: "alert-error",
 				modal: true,
@@ -34,7 +33,7 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 		});
 	};
 	
-	$scope.submit = function() {
+	$scope.submit = function(doPrint) {
 		$scope.isSubmitting = true;
 		$(".in.collapse").collapse("toggle");
 		$("html, body").animate({ scrollTop: 0 }, "slow");
@@ -45,7 +44,11 @@ invoiceApp.controller("InvoiceCtrl", function InvoiceCtrl($scope, InvoiceService
 				text: "Daten wurden erfolgreich gespeichert!<br>Kundenbeleg wird generiert.",
 				timeout: 30,
 			});
-			print();
+			if (doPrint) {
+				print();
+			} else {
+				$scope.reset();
+			}
 		}, function(data, headers){
 			$scope.$emit("alert", {
 				type: "alert-error",

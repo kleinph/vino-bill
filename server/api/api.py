@@ -28,6 +28,11 @@ class InvoicePositionResource(ModelResource):
         serializer = PrettyJSONSerializer()
         
 class InvoiceResource(ModelResource):
+    pretty_id = fields.CharField(attribute = "_get_pretty_id", readonly = True)
+    sum = fields.DecimalField(attribute = "_get_sum", readonly = True)
+    rebate_amount = fields.DecimalField(attribute = "_get_rebate_amount", readonly = True)
+    ust_amount = fields.DecimalField(attribute = "_get_ust_amount", readonly = True)
+    total = fields.DecimalField(attribute = "_get_total", readonly = True)
     items = fields.ToManyField(InvoicePositionResource, "invoiceposition_set", related_name = "invoice")
     
     class Meta:

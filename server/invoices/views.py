@@ -29,7 +29,7 @@ def pdf(request, invoice_id):
     out.close()
     
     if not pdf.err:
-      return HttpResponse(open(filename, "rb"), mimetype = "application/pdf")
+      return HttpResponse(open(filename, "rb"), content_type = "application/pdf")
     return HttpResponseServerError("Error rendering pdf<pre>%s</pre>" % escape(html))
     # TODO delete file if generation was unsuccessful
 
